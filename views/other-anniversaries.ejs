@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Other Anniversaries</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid lightgray;
+      min-height: 60vh;
+      padding: 10px;
+      overflow-y: auto;
+      width: 90%;
+      max-width: 400px;
+      margin: 0 auto 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      display: block;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #ac977eef;
+      border-radius: 5px;
+    }
+    li {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 8px 16px;
+      margin: 0 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #f9f9f9;
+      background-color: #543006ef;;
+      cursor: pointer;
+    }
+
+    a:hover {
+      background-color: #a28461ef;
+    }
+
+
+    .btn.disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      background-color: #a28461ef;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .pagination p {
+      margin: 0 10px;
+    }
+
+    .btn-delete {
+      display: inline-block;
+      padding: 8px 16px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #fff;
+      background-color: #d9534f;
+      cursor: pointer;
+    }
+
+    .btn-delete:hover {
+      background-color: #c9302c;
+    }
+
+    .delete-form {
+      display: inline-block;
+    }
+
+
+    @media screen and (max-width: 600px) {
+      li {
+        padding: 15px;
+      }
+
+      .pagination {
+        text-align: center;
+      }
+
+      .btn {
+        margin: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <%- include('./partials/header'); %>
+  </header>
+  <div class="container">
+    <h3>Other Anniversaries</h3>
+    <% if (messages.error) { %>
+      <div class="alert alert-danger text-center">
+        <ul>
+          <% messages.error.forEach(function(error) { %>
+            <li><%= error %></li>
+          <% }); %>
+        </ul>
+      </div>
+    <% } %>
+    <% if(messages.success) {%>
+      <div class="alert alert-success text-center">
+        <li><%=messages.success%></li>
+    </div>
+    <%} else {%>
+      <ul>
+        <% anniversaries.forEach(anniversary => { %>
+          <li>
+            <strong>Anniversary:</strong> <%= anniversary.anniversary_name %><br>
+            <strong>Recipient:</strong> <%= anniversary.recipient_name %><br>
+            <strong>Recipient Email:</strong> <%= anniversary.recipient_email %><br>
+            <strong>Next Anniversary Date:</strong> <span class="dateElement"><%= anniversary.next_date %></span><br><br>
+            <form action="/views/delete-other-anniversary" method="POST" class="delete-form">
+              <input type="hidden" name="anniversary_id" value="<%= anniversary._id %>">
+              <button type="submit" class="btn-delete">Delete</button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    <%}%>
+  </div>
+  <!-- Pagination buttons -->
+  <div class="pagination">
+    <% if (currentPage > 1) { %>
+      <a href="/views/my-anniversaries?page=<%= Number(currentPage) - 1 %>" class="btn">Previous</a>
+    <% } else { %>
+      <a class="btn" style="cursor: not-allowed;">Previous</a>
+    <% } %>
+
+    <p>Page <%= currentPage %> of <%= pages %></p>
+
+    <% if (currentPage < pages) { %>
+      <a href="/views2/my-anniversaries?page=<%= Number(currentPage) + 1 %>" class="btn">Next</a>
+    <% } else { %>
+      <a class="btn" style="cursor: not-allowed;">Next</a>
+    <% } %>
+  </div>
+
+
+
+  <footer>
+    <%- include('./partials/footer'); %>
+  </footer>
+
+  <script>
+    function formatDate(date) {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+
+    window.onload = function() {
+      const elements = document.getElementsByClassName('dateElement');
+      for (let i = 0; i < elements.length; i++) {
+        const currentDate = new Date(elements[i].textContent);
+        const formattedDate = formatDate(currentDate);
+        elements[i].textContent = formattedDate;
+      }
+    };
+  </script>
+</body>
+</html>

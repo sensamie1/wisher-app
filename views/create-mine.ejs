@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Mine</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="./views-router.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-content {
+      margin-top: 30px;
+    }
+
+    .page-content h2 {
+      color: #333;
+    }
+
+    .page-content form {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-content label {
+      display: block;
+      text-align: left;
+      margin: 10px 0 5px;
+    }
+
+    .page-content input[type="text"],
+    .page-content input[type="email"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .page-content input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #543006ef;
+      border-radius: 5px;
+      background-color: #fff;
+      color: #543006ef;
+      cursor: pointer;
+    }
+
+    .page-content a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 10px;
+    }
+
+    .page-content input[type="date"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .page-content input[type="submit"]:hover {
+      background-color: #543006ef;
+      color: #fff;
+    }
+
+
+    /* Password match icon */
+    .password-match-icon {
+      /* position: absolute;
+      right: 10px;
+      top: 50%; */
+      /* transform: translateY(-50%); */
+      color: #543006ef; 
+    }
+
+    @media screen and (max-width: 768px) {
+      .page-content form {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <%- include('./partials/header'); %>
+  </header>
+
+  <div class="page-content">
+    <h2>Create My Anniversary</h2>
+
+    <% if (messages.error) { %>
+      <div class="alert alert-danger text-center">
+        <ul>
+          <% messages.error.forEach(function(error) { %>
+            <li><%= error %></li>
+          <% }); %>
+        </ul>
+      </div>
+    <% } %>
+    <% if(messages.success) {%>
+      <div class="alert alert-success text-center">
+        <li><%=messages.success%></li>
+      </div>
+    <%} else {%>
+      <form action="/views/create-mine" method="post">
+        <label for="anniversary_name">Anniversary Name:</label><br>
+        <input type="text" id="anniversary_name" name="anniversary_name" placeholder="Enter anniversary name (e.g. Wedding or Birthday)" required><br>
+  
+        <label for="next_date">Next Anniversary Date:</label><br>
+        <input type="date" id="next_date" name="next_date"  required><br>
+  
+        <input type="submit" class="btn" value="Create" style="font-weight: bolder;"><br>
+      </form>
+    <%}%>
+  </div>
+
+  <footer>
+    <%- include('./partials/footer'); %>
+  </footer>
+
+  <script>
+    // Set min attribute of the date input field to the current date
+    document.getElementById('next_date').setAttribute('min', new Date().toISOString().split('T')[0]);
+  </script>
+
+</body>
+</html>
